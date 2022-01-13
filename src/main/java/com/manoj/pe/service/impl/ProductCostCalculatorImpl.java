@@ -9,13 +9,10 @@ import java.util.Map.Entry;
 import com.manoj.pe.model.Cart;
 import com.manoj.pe.model.Product;
 import com.manoj.pe.model.enums.ProductPriceEnum;
+import com.manoj.pe.model.enums.PromotionRuleEnum;
 import com.manoj.pe.service.ProductCostCalculator;
 
 public class ProductCostCalculatorImpl implements ProductCostCalculator {
-
-	private static final int TRIPPLE_A_PROMOTION_PRICE = 130;
-	private static final int DOUBLE_B_PROMOTION_PRICE = 45;
-	private static final int C_AND_D_PROMOTION_PRICE = 30;
 
 	private static final String PRODUCT_A_CODE = "a";
 	private static final String PRODUCT_B_CODE = "b";
@@ -79,13 +76,13 @@ public class ProductCostCalculatorImpl implements ProductCostCalculator {
 			Integer cProductsCount = productsCountMap.get(new Product(PRODUCT_C_CODE));
 			Integer dProductsCount = productsCountMap.get(new Product(PRODUCT_D_CODE));
 			if (cProductsCount == dProductsCount) {
-				cdProductCPrice = cProductsCount * C_AND_D_PROMOTION_PRICE;
+				cdProductCPrice = cProductsCount * PromotionRuleEnum.C_AND_D.getPrice();
 			} else if (cProductsCount > dProductsCount) {
-				cdProductCPrice = dProductsCount * C_AND_D_PROMOTION_PRICE;
+				cdProductCPrice = dProductsCount * PromotionRuleEnum.C_AND_D.getPrice();
 				int extraCPrice = (cProductsCount - dProductsCount) * ProductPriceEnum.C_Product.getPrice();
 				cdProductCPrice = cdProductCPrice + extraCPrice;
 			} else if (dProductsCount > cProductsCount) {
-				cdProductCPrice = cProductsCount * C_AND_D_PROMOTION_PRICE;
+				cdProductCPrice = cProductsCount * PromotionRuleEnum.C_AND_D.getPrice();
 				int extraDPrice = (dProductsCount - cProductsCount) * ProductPriceEnum.D_Product.getPrice();
 				cdProductCPrice = cdProductCPrice + extraDPrice;
 			}
@@ -99,10 +96,10 @@ public class ProductCostCalculatorImpl implements ProductCostCalculator {
 
 	private int calculateAsPromotionPrice(Integer productsCount) {
 
-		int quotient = productsCount / 3;
-		int remainder = productsCount % 3;
+		int quotient = productsCount / PromotionRuleEnum.THREE_A.getCount();
+		int remainder = productsCount % PromotionRuleEnum.THREE_A.getCount();
 
-		int promotionPrice = TRIPPLE_A_PROMOTION_PRICE * quotient;
+		int promotionPrice = PromotionRuleEnum.THREE_A.getPrice() * quotient;
 		int normalPrice = ProductPriceEnum.A_Product.getPrice() * remainder;
 
 		return promotionPrice + normalPrice;
@@ -111,10 +108,10 @@ public class ProductCostCalculatorImpl implements ProductCostCalculator {
 
 	private int calculateBsPromotionPrice(Integer productsCount) {
 
-		int quotient = productsCount / 2;
-		int remainder = productsCount % 2;
+		int quotient = productsCount / PromotionRuleEnum.TWO_B.getCount();
+		int remainder = productsCount % PromotionRuleEnum.TWO_B.getCount();
 
-		int promotionPrice = DOUBLE_B_PROMOTION_PRICE * quotient;
+		int promotionPrice = PromotionRuleEnum.TWO_B.getPrice() * quotient;
 		int normalPrice = ProductPriceEnum.B_Product.getPrice() * remainder;
 
 		return promotionPrice + normalPrice;
